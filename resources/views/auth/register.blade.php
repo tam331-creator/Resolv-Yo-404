@@ -425,6 +425,7 @@
     }
 </style>
 
+<!-- Top Floating Bar (Left: Alert Guide | Right: Language Translate) -->
 <div class="top-header-bar">
     <button type="button" class="btn-alert-guide" onclick="toggleSideGuide()">
         <span>⚠️ Important Registration Information</span>
@@ -448,7 +449,9 @@
     </select>
 </div>
 
+<!-- Resizable Side Panel Registration Guidelines -->
 <div id="sideGuidePanel" class="guide-side-panel">
+    <!-- VS Code Style Resizer Handle -->
     <div id="resizerHandle" class="resizer-bar"></div>
 
     <h3>
@@ -457,36 +460,45 @@
     </h3>
     <hr style="border-color: rgba(255,255,255,0.1); margin-bottom: 16px;">
 
+    <!-- 1. Full Name -->
     <div class="guide-section-item">
         <div class="guide-title">1. Full Name</div>
         <div class="guide-text"><b>• Guideline:</b> Enter your full name as per NRIC / official company records.</div>
-        <div class="guide-text"><b>• Reason:</b> Helps the IT team and system verify account identity and asset ownership.</div>
+        <div class="guide-text"><b>• Reason:</b> Helps the IT team and system verify account identity and asset ownership (IT Asset Management).</div>
         <div class="guide-text"><b>• Example:</b> Thaksin A/L Bun Chuan or Ahmad Razali bin Ismail</div>
     </div>
 
+    <!-- 2. Official Email -->
     <div class="guide-section-item">
         <div class="guide-title">2. Official Email</div>
         <div class="guide-text"><b>• Guideline:</b> Please enter an active and accessible email address.</div>
         <div class="guide-text"><b>• Example:</b> tam@gmail.com or tam@company.com</div>
-        <div class="guide-text"><b>• Reason:</b> Notifications and reset links will be sent to this email.</div>
+        <div class="guide-text"><b>• Reason:</b> The system will send ticket notifications, status updates, and password reset links to this registered email address.</div>
     </div>
 
+    <!-- 3. Phone Number -->
     <div class="guide-section-item">
         <div class="guide-title">3. Phone Number / WhatsApp</div>
         <div class="guide-text"><b>• Guideline:</b> Enter an active phone number that is reachable or linked to WhatsApp.</div>
+        <div class="guide-text"><b>• Reason:</b> IT Officers / Technicians will make immediate calls or send messages if an IT issue requires critical on-site action.</div>
         <div class="guide-text"><b>• Format:</b> 0123456789 (Without - or spaces)</div>
     </div>
 
+    <!-- 4. Role -->
     <div class="guide-section-item">
         <div class="guide-title">4. Role</div>
         <div class="guide-text"><b>• Selection Guidelines:</b></div>
         <div class="guide-text" style="padding-left: 10px;">- <b>Staff:</b> For employees submitting tickets or reporting IT issues.</div>
-        <div class="guide-text" style="padding-left: 10px;">- <b>Technician:</b> For IT Department staff responsible for resolving tickets.</div>
+        <div class="guide-text" style="padding-left: 10px;">- <b>Technician:</b> For IT Department staff responsible for managing and resolving tickets.</div>
+        <div class="guide-text" style="margin-top: 6px;"><b>⚠️ Important:</b> All users outside the IT Department must select Staff.</div>
+        <div class="guide-text"><b>🔍 Admin Review:</b> Incorrect role selections will be reviewed and revoked by System Admins.</div>
     </div>
 
+    <!-- 5. Password -->
     <div class="guide-section-item">
         <div class="guide-title">5. Password</div>
-        <div class="guide-text"><b>• Guideline:</b> Create a password of at least 8 characters.</div>
+        <div class="guide-text"><b>• Guideline:</b> Create a password of at least 8 characters containing a combination of letters and numbers.</div>
+        <div class="guide-text"><b>• Security:</b> Do not use simple passwords (such as 123456 or password). Your password is encrypted and cannot be read by any administrator.</div>
     </div>
 </div>
 
