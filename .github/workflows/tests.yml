@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -39,6 +39,7 @@ jobs:
 
     - name: Run Tests via Artisan
       env:
+        DB_CLIENT: sqlite
         DB_CONNECTION: sqlite
-        DB_DATABASE: ':memory:'
+        DB_DATABASE: database/database.sqlite
       run: php artisan test
