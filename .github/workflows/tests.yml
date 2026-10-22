@@ -20,14 +20,23 @@ jobs:
         extensions: mbstring, dom, fileinfo, sqlite, pdo_sqlite
         coverage: none
 
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-    - name: Install Dependencies
+    - name: Install PHP Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-    - name: Generate key
-      run: php artisan key:generate
+    - name: Install Node Dependencies & Build Assets
+      run: |
+        npm ci || npm install
+        npm run build
+
+    - name: Setup Environment File
+      run: |
+        php -r "file_exists('.env') || copy('.env.example', '.env');"
+        php artisan key:generate
 
     - name: Create SQLite Database
       run: |
@@ -37,9 +46,9 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
-    - name: Run Tests via Artisan
+    - name: Run Tests
       env:
-        DB_CLIENT: sqlite
         DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_DATABASE: ':memory:'
+        APP_ENV: testing
       run: php artisan test
