@@ -141,7 +141,7 @@
                 </div>
             </div>
 
-            <!-- 📊 2. MY ACTIVITY CARD -->
+            <!-- 📊 2. MY ACTIVITY CARD (ROLE-ACCURATE KPIS) -->
             <div class="bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-2xl hover:border-slate-700/60 transition-all duration-300 space-y-5">
                 <div class="flex justify-between items-center border-b border-slate-800/80 pb-4">
                     <h3 class="font-bold text-slate-100 text-sm flex items-center gap-2.5 tracking-wide">
@@ -156,63 +156,184 @@
                     </select>
                 </div>
 
-                <!-- 4 Statistik Card (GRADIENT BG EXACTLY FROM ANALYTICS SYSTEM LAMA) -->
+                <!-- 4 KARD KPI DINAMIK MENGIKUT ROLE -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
-                    <!-- Kad 1: Tickets Created / Jumlah Keseluruhan (Cyan-Blue Gradient) -->
-                    <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
-                        <div class="flex justify-between items-start">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Tickets Created</span>
-                            <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
-                                <i class="fa-solid fa-file-lines"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['created_tickets'] }}</h4>
-                            <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Total submitted</p>
-                        </div>
-                    </div>
 
-                    <!-- Kad 2: Tickets Resolved / Tiket Berjaya Selesai (Green Gradient) -->
-                    <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #198754, #20c997);">
-                        <div class="flex justify-between items-start">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Tickets Resolved</span>
-                            <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
-                                <i class="fa-solid fa-circle-check"></i>
+                    @if(Auth::user()->role === 'staff')
+                        <!-- ==================== ROLE: STAFF ==================== -->
+                        <!-- 🟦 1. My Tickets Submitted -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">My Tickets Submitted</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-file-lines"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['created_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Total submitted</p>
                             </div>
                         </div>
-                        <div>
-                            <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['resolved_tickets'] }}</h4>
-                            <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Status "Closed"</p>
-                        </div>
-                    </div>
 
-                    <!-- Kad 3: Average Rating / Purata Kepuasan Staff (Purple Gradient) -->
-                    <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #6f42c1, #4e73df);">
-                        <div class="flex justify-between items-start">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Average Rating</span>
-                            <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
-                                <i class="fa-solid fa-star"></i>
+                        <!-- 🟨 2. Open Tickets -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Open Tickets</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-spinner"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['open_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Pending resolution</p>
                             </div>
                         </div>
-                        <div>
-                            <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ number_format($myActivity['average_rating'], 1) }} <span class="text-xs font-bold text-slate-900/80">/ 5.0</span></h4>
-                            <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">User feedback score</p>
-                        </div>
-                    </div>
 
-                    <!-- Kad 4: Avg. Response Time / Tiket Belum Selesai (Orange Gradient) -->
-                    <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #fd7e14, #ffc107);">
-                        <div class="flex justify-between items-start">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Avg. Response</span>
-                            <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
-                                <i class="fa-solid fa-clock"></i>
+                        <!-- 🟩 3. Resolved Tickets -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #198754, #20c997);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Resolved Tickets</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['resolved_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Status "Closed"</p>
                             </div>
                         </div>
-                        <div>
-                            <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">2.1 <span class="text-xs font-bold text-slate-900/80">days</span></h4>
-                            <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Average resolution time</p>
+
+                        <!-- 🟪 4. Average Satisfaction Given -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #6f42c1, #4e73df);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Avg. Satisfaction Given</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ number_format($myActivity['average_rating'], 1) }} <span class="text-xs font-bold text-slate-900/80">/ 5.0</span></h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">User feedback score</p>
+                            </div>
                         </div>
-                    </div>
+
+                    @elseif(Auth::user()->role === 'technician')
+                        <!-- ==================== ROLE: TECHNICIAN ==================== -->
+                        <!-- 🟦 1. Assigned Tickets -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Assigned Tickets</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-clipboard-list"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['created_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Workload assigned</p>
+                            </div>
+                        </div>
+
+                        <!-- 🟩 2. Resolved Tickets -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #198754, #20c997);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Resolved Tickets</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['resolved_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Successfully closed</p>
+                            </div>
+                        </div>
+
+                        <!-- 🟪 3. Average Resolution Time -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #6f42c1, #4e73df);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Avg. Resolution Time</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-stopwatch"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['avg_response'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Personal SLA time</p>
+                            </div>
+                        </div>
+
+                        <!-- 🟧 4. Average Rating Received -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #fd7e14, #ffc107);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Avg. Rating Received</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-award"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ number_format($myActivity['average_rating'], 1) }} <span class="text-xs font-bold text-slate-900/80">/ 5.0</span></h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Service CSAT score</p>
+                            </div>
+                        </div>
+
+                    @else
+                        <!-- ==================== ROLE: ADMIN ==================== -->
+                        <!-- 🟦 1. Total Tickets -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Total Tickets</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-database"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['created_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">System-wide records</p>
+                            </div>
+                        </div>
+
+                        <!-- 🟩 2. Resolved Tickets -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #198754, #20c997);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Resolved Tickets</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['resolved_tickets'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Total closed jobs</p>
+                            </div>
+                        </div>
+
+                        <!-- 🟧 3. SLA Compliance (%) -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #fd7e14, #ffc107);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">SLA Compliance</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ $myActivity['sla_compliance'] }}</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">On-time resolution rate</p>
+                            </div>
+                        </div>
+
+                        <!-- 🟪 4. Average Team Rating Satisfaction -->
+                        <div class="rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #6f42c1, #4e73df);">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-950">Avg. Team CSAT</span>
+                                <div class="w-8 h-8 rounded-lg bg-black/15 text-slate-950 flex items-center justify-center text-sm font-bold shadow-inner">
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-950 tracking-tight" style="color: #000000;">{{ number_format($myActivity['average_rating'], 1) }} <span class="text-xs font-bold text-slate-900/80">/ 5.0</span></h4>
+                                <p class="text-[10px] font-bold text-slate-900/80 mt-0.5" style="color: #000000;">Overall IT satisfaction</p>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
 
                 <!-- Recent Activity Feed -->
@@ -695,7 +816,6 @@
             } else if (activeCategory === 'closed') {
                 matchCategory = isClosed;
             } else {
-                // Menyokong padanan 'asset' dan 'assets' secara automatik
                 matchCategory = (cat === activeCategory || (cat === 'assets' && activeCategory === 'asset') || (cat === 'asset' && activeCategory === 'assets'));
             }
 
@@ -712,7 +832,6 @@
             }
         });
 
-        // Tunjuk Mesej jika tiada rekod sepadan
         const noMatchMsg = document.getElementById('noMatchMessage');
         if (noMatchMsg) {
             if (visibleCount === 0) {

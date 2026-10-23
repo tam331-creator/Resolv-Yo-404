@@ -48,16 +48,40 @@
         box-sizing: border-box;
     }
 
-    /* Kad Clean Dark Slate Enterprise */
+    /* Kad Clean Dark Slate Enterprise Dengan Border Neon 4 Warna Berpusing */
     .card-neon-box {
         position: relative;
         width: 100%;
         max-width: 440px;
-        border-radius: 16px;
-        background-color: #0f172a; /* Slate-900 */
-        border: 1px solid #1e293b; /* Slate-800 */
+        border-radius: 18px;
+        padding: 2.5px;
+        overflow: hidden;
+        background: transparent;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
         box-sizing: border-box;
+    }
+
+    .card-neon-box::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+        from 0deg,   
+            #4f46e5 0%,   
+            #06b6d4 30%,
+            #3b82f6 60%,
+            #4f46e5 100%
+        );
+        animation: spin-neon 4s linear infinite;
+        z-index: 0;
+    }
+
+    @keyframes spin-neon {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 
     /* Inner Kad Hitam/Slate */
@@ -65,6 +89,7 @@
         position: relative;
         z-index: 1;
         border-radius: 16px;
+        background-color: #0f172a !important; /* Slate-900 */
         padding: 32px 30px;
         text-align: center;
         color: #ffffff;

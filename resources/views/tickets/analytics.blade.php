@@ -16,106 +16,83 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-2xl">
         <div>
             <h1 class="text-xl sm:text-2xl font-black text-slate-100 flex items-center gap-2.5">
-                <i class="fa-solid fa-chart-line text-cyan-400"></i> Analytics & Performance Report
+                <i class="fa-solid fa-chart-line text-indigo-400"></i> Analytics & Performance Report
             </h1>
             <p class="text-xs text-slate-400 mt-1">Visual representation of IT support ticket statistics and breakdown.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto shrink-0">
-            <button onclick="window.print()" class="flex-1 sm:flex-none bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+            <button onclick="window.print()" class="flex-1 sm:flex-none bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-print"></i> Print / Save PDF
             </button>
-            <a href="{{ route('tickets.index') }}" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2 border border-slate-700">
+            <a href="{{ route('tickets.index') }}" class="flex-1 sm:flex-none bg-slate-800/90 hover:bg-slate-700/90 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2 border border-slate-700/80">
                 <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
             </a>
         </div>
     </div>
 
-    @php
-        $totalTickets   = \App\Models\Ticket::count();
-        $closedTickets  = \App\Models\Ticket::where('status', 'Closed')->count();
-        $pendingTickets = \App\Models\Ticket::whereIn('status', ['Open', 'In Progress'])->count();
-        $hardwareCount  = \App\Models\Ticket::where('category', 'Hardware')->count();
-        $softwareCount  = \App\Models\Ticket::where('category', 'Software')->count();
-        $networkCount   = \App\Models\Ticket::where('category', 'Network')->count();
-        $otherCount     = \App\Models\Ticket::where('category', 'Other')->count();
-        $openCount      = \App\Models\Ticket::where('status', 'Open')->count();
-        $inProgressCount= \App\Models\Ticket::whereIn('status', ['In Progress'])->count();
-
-        // Pengiraan Dinamik untuk Satisfaction Rating
-        $avgRating     = round(\App\Models\Ticket::whereNotNull('rating')->avg('rating') ?? 0, 1);
-        $totalFeedback = \App\Models\Ticket::whereNotNull('rating')->count();
-
-        // Mengira bilangan tiket bagi setiap bintang (1 hingga 5 bintang)
-        $star1 = \App\Models\Ticket::where('rating', 1)->count();
-        $star2 = \App\Models\Ticket::where('rating', 2)->count();
-        $star3 = \App\Models\Ticket::where('rating', 3)->count();
-        $star4 = \App\Models\Ticket::where('rating', 4)->count();
-        $star5 = \App\Models\Ticket::where('rating', 5)->count();
-    @endphp
-
-    <!-- 4 Original Gradient Top Cards (Gaya Analytics System Lama) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+    <!-- 4 Modern Low-Glare KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <!-- Average Staff Satisfaction (Purple Gradient) -->
-        <div class="rounded-xl p-4 shadow-xl flex items-center justify-between transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #6f42c1, #4e73df);">
+        <!-- Average Staff Satisfaction -->
+        <div class="relative bg-slate-900/90 border-b-2 border-b-indigo-500 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex items-center justify-between backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-wider text-slate-950" style="color: #000000;">AVG STAFF SATISFACTION</p>
-                <div class="flex items-baseline gap-1 mt-1">
-                    <span class="text-2xl font-black text-slate-950" style="color: #000000;">{{ number_format($avgRating, 1) }}</span>
-                    <span class="text-xs font-bold text-slate-900/80" style="color: #000000;">/ 5.0</span>
+                <p class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">AVG SATISFACTION</p>
+                <div class="flex items-baseline gap-1 mt-1.5">
+                    <span class="text-3xl font-black text-slate-100">{{ number_format($avgRating, 1) }}</span>
+                    <span class="text-xs font-bold text-slate-400">/ 5.0</span>
                 </div>
-                <p class="text-[9px] font-bold text-slate-900/80 mt-1" style="color: #000000;">Based on {{ $totalFeedback }} feedback</p>
+                <p class="text-[10px] font-medium text-slate-400 mt-1">Based on {{ $totalFeedback }} feedback</p>
             </div>
-            <div class="text-amber-300 text-3xl opacity-90 drop-shadow">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-star"></i>
             </div>
         </div>
 
-        <!-- Resolved Tickets (Green Gradient) -->
-        <div class="rounded-xl p-4 shadow-xl flex items-center justify-between transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #198754, #20c997);">
+        <!-- Resolved Tickets -->
+        <div class="relative bg-slate-900/90 border-b-2 border-b-emerald-500 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex items-center justify-between backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-wider text-slate-950" style="color: #000000;">RESOLVED TICKETS</p>
-                <span class="text-2xl font-black text-slate-950 mt-1 block" style="color: #000000;">{{ $closedTickets }}</span>
-                <p class="text-[9px] font-bold text-slate-900/80 mt-1" style="color: #000000;">Status: Closed</p>
+                <p class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">RESOLVED TICKETS</p>
+                <span class="text-3xl font-black text-slate-100 mt-1.5 block">{{ $closedTickets }}</span>
+                <p class="text-[10px] font-medium text-slate-400 mt-1">Status: Closed / Resolved</p>
             </div>
-            <div class="w-9 h-9 rounded-full bg-black/15 text-slate-950 flex items-center justify-center text-sm font-black shadow-inner">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-check"></i>
             </div>
         </div>
 
-        <!-- Unresolved Tickets (Orange/Amber Gradient) -->
-        <div class="rounded-xl p-4 shadow-xl flex items-center justify-between transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #fd7e14, #ffc107);">
+        <!-- Unresolved Tickets -->
+        <div class="relative bg-slate-900/90 border-b-2 border-b-amber-500 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex items-center justify-between backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-wider text-slate-950" style="color: #000000;">UNRESOLVED TICKETS</p>
-                <span class="text-2xl font-black text-slate-950 mt-1 block" style="color: #000000;">{{ $pendingTickets }}</span>
-                <p class="text-[9px] font-bold text-slate-900/80 mt-1" style="color: #000000;">Status: Open / In Progress</p>
+                <p class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">UNRESOLVED TICKETS</p>
+                <span class="text-3xl font-black text-slate-100 mt-1.5 block">{{ $pendingTickets }}</span>
+                <p class="text-[10px] font-medium text-slate-400 mt-1">Status: Open / In Progress</p>
             </div>
-            <div class="w-9 h-9 rounded-full bg-black/15 text-slate-950 flex items-center justify-center text-sm font-black shadow-inner">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-hourglass-half"></i>
             </div>
         </div>
 
-        <!-- Total Overall (Cyan-Blue Gradient) -->
-        <div class="rounded-xl p-4 shadow-xl flex items-center justify-between transform hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
+        <!-- Total Overall -->
+        <div class="relative bg-slate-900/90 border-b-2 border-b-sky-500 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex items-center justify-between backdrop-blur-xl transition-all duration-200 hover:-translate-y-0.5">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-wider text-slate-950" style="color: #000000;">TOTAL OVERALL</p>
-                <span class="text-2xl font-black text-slate-950 mt-1 block" style="color: #000000;">{{ $totalTickets }}</span>
-                <p class="text-[9px] font-bold text-slate-900/80 mt-1" style="color: #000000;">Recorded in database</p>
+                <p class="text-[10px] font-extrabold uppercase tracking-widest text-sky-400">TOTAL OVERALL</p>
+                <span class="text-3xl font-black text-slate-100 mt-1.5 block">{{ $totalTickets }}</span>
+                <p class="text-[10px] font-medium text-slate-400 mt-1">Recorded in database</p>
             </div>
-            <div class="w-9 h-9 rounded-full bg-black/15 text-slate-950 flex items-center justify-center text-sm font-black shadow-inner">
+            <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-ticket"></i>
             </div>
         </div>
 
     </div>
 
-    <!-- Charts Row 1: Pie & Donut Charts (DARK SLATE CARDS) -->
+    <!-- Charts Row 1: Pie & Donut Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         
         <!-- Category Breakdown -->
         <div class="bg-slate-900/90 backdrop-blur-xl text-slate-100 rounded-2xl p-5 shadow-2xl border border-slate-800/80">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-pie text-cyan-400"></i> Breakdown by Issue Category
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-indigo-400"></i> Breakdown by Issue Category
             </h3>
             <div class="h-64 relative flex items-center justify-center">
                 <canvas id="categoryChart"></canvas>
@@ -124,7 +101,7 @@
 
         <!-- Ticket Status Breakdown -->
         <div class="bg-slate-900/90 backdrop-blur-xl text-slate-100 rounded-2xl p-5 shadow-2xl border border-slate-800/80">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 mb-4 flex items-center gap-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-chart-donut text-emerald-400"></i> Ticket Status Breakdown
             </h3>
             <div class="h-64 relative flex items-center justify-center">
@@ -134,9 +111,9 @@
 
     </div>
 
-    <!-- Charts Row 2: Ratings Bar Chart (DARK SLATE CARD) -->
+    <!-- Charts Row 2: Ratings Bar Chart -->
     <div class="bg-slate-900/90 backdrop-blur-xl text-slate-100 rounded-2xl p-5 shadow-2xl border border-slate-800/80">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 mb-4 flex items-center gap-2">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-chart-column text-amber-400"></i> Staff Satisfaction Rating Distribution (Stars)
         </h3>
         <div class="h-60 relative">
@@ -150,10 +127,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Global Chart.js Text Color for Dark Theme
-    Chart.defaults.color = '#cbd5e1';
+    Chart.defaults.color = '#94a3b8';
 
-    // 1. Category Chart
+    // 1. Category Chart (Aesthetic Glass Modern Palette)
     const ctxCat = document.getElementById('categoryChart').getContext('2d');
     new Chart(ctxCat, {
         type: 'pie',
@@ -161,7 +137,7 @@
             labels: ['Hardware', 'Software', 'Network', 'Other'],
             datasets: [{
                 data: [{{ $hardwareCount }}, {{ $softwareCount }}, {{ $networkCount }}, {{ $otherCount }}],
-                backgroundColor: ['#38bdf8', '#34d399', '#f59e0b', '#94a3b8'],
+                backgroundColor: ['#0284c7', '#8b5cf6', '#f59e0b', '#64748b'],
                 borderWidth: 2,
                 borderColor: '#0f172a'
             }]
@@ -178,7 +154,7 @@
         }
     });
 
-    // 2. Status Chart
+    // 2. Status Chart (Pro-Grade Muted Tones)
     const ctxStat = document.getElementById('statusChart').getContext('2d');
     new Chart(ctxStat, {
         type: 'doughnut',
@@ -203,7 +179,7 @@
         }
     });
 
-    // 3. Rating Chart
+    // 3. Rating Chart (Modern Indigo Gradient Bars)
     const ctxRate = document.getElementById('ratingChart').getContext('2d');
     new Chart(ctxRate, {
         type: 'bar',
@@ -212,8 +188,8 @@
             datasets: [{
                 label: 'Number of Feedback',
                 data: [{{ $star1 }}, {{ $star2 }}, {{ $star3 }}, {{ $star4 }}, {{ $star5 }}],
-                backgroundColor: '#f59e0b',
-                borderRadius: 6
+                backgroundColor: '#6366f1',
+                borderRadius: 8
             }]
         },
         options: {
@@ -222,7 +198,7 @@
             scales: {
                 y: { 
                     beginAtZero: true, 
-                    ticks: { stepSize: 1, color: '#94a3b8' },
+                    ticks: { stepSize: 1, color: '#64748b' },
                     grid: { color: 'rgba(255, 255, 255, 0.05)' }
                 },
                 x: {

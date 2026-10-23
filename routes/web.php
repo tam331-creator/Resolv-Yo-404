@@ -8,6 +8,7 @@ use App\Http\Controllers\AiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Broadcast;
 
 // -------------------------------------------------------------
@@ -60,13 +61,8 @@ Route::middleware(['auth'])->group(function () {
     // Route Penilaian Bintang (Star Rating)
     Route::post('/tickets/{id}/rating', [TicketController::class, 'submitRating'])->name('tickets.rating');
 
-    // Route Khas Admin
-    Route::get('/analytics', function () {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Access Denied. This page is restricted to Admin only.');
-        }
-        return view('tickets.analytics');
-    })->name('analytics.index');
+    // Route Analytics (Diubahsuai untuk menggunakan AnalyticsController)
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
     // Route Modul ITAM
     Route::get('/assets/{asset}/history', [AssetController::class, 'getHistory'])->name('assets.history');

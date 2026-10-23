@@ -28,25 +28,99 @@ class ProfileController extends Controller
             $ticketQuery->whereYear('created_at', Carbon::now()->year);
         }
 
-        // Pengiraan Aktiviti Ringkasan (My Activity)
-        $createdCount = (clone $ticketQuery)->where('user_id', $user->id)->count();
-        $resolvedCount = (clone $ticketQuery)->where(function($q) use ($user) {
-                            $q->where('user_id', $user->id)
-                              ->orWhere('assigned_to', $user->id);
-                        })->whereIn('status', ['Closed', 'Resolved'])->count();
+        // Pengiraan Aktiviti Ringkasan Dinamik Mengikut Role (My Activity)
+        if ($user->role === 'admin') {
+            $createdCount = (clone $ticketQuery)->count();
+            $resolvedCount = (clone $ticketQuery)->whereIn('status', ['Closed', 'Resolved'])->count();
+            $openCount = (clone $ticketQuery)->whereNotIn('status', ['Closed', 'Resolved'])->count();
 
-        $avgRating = (clone $ticketQuery)->where(function($q) use ($user) {
-                        $q->where('user_id', $user->id)
-                          ->orWhere('assigned_to', $user->id);
-                    })
-                    ->whereNotNull('rating')
-                    ->where('rating', '>', 0)
-                    ->avg('rating') ?? 0;
+            $avgRating = (clone $ticketQuery)->whereNotNull('rating')
+                        ->where('rating', '>', 0)
+                        ->avg('rating') ?? 0;
+
+            // PENGIRAAN ACCURATE SLA COMPLIANCE (ADMIN - KESELURAHAN SISTEM)
+            // Mengambil semua tiket yang mempunyai ketetapan sla_due_at
+            $allSlaTickets = (clone $ticketQuery)->whereNotNull('sla_due_at')->get();
+            $totalSlaCount = $allSlaTickets->count();
+            $metSlaCount = 0;
+
+            foreach ($allSlaTickets as $t) {
+                if (in_array($t->status, ['Closed', 'Resolved'])) {
+                    // Tiket telah selesai: dikira lulus jika tarikh selesai (updated_at) <= sla_due_at
+                    if ($t->updated_at <= $t->sla_due_at) {
+                        $metSlaCount++;
+                    }
+                } else {
+                    // Tiket masih aktif (Open / In Progress): dikira lulus jika waktu sekarang <= sla_due_at
+                    if (now() <= $t->sla_due_at) {
+                        $metSlaCount++;
+                    }
+                }
+            }
+
+            $slaCompliance = $totalSlaCount > 0 ? round(($metSlaCount / $totalSlaCount) * 100, 1) : 100.0;
+            $closedTickets = (clone $ticketQuery)->whereIn('status', ['Closed', 'Resolved'])->get();
+
+        } elseif ($user->role === 'technician') {
+            $createdCount = (clone $ticketQuery)->where('assigned_to', $user->id)->count();
+            $resolvedCount = (clone $ticketQuery)->where('assigned_to', $user->id)
+                                                ->whereIn('status', ['Closed', 'Resolved'])->count();
+            $openCount = (clone $ticketQuery)->where('assigned_to', $user->id)
+                                             ->whereNotIn('status', ['Closed', 'Resolved'])->count();
+
+            $avgRating = (clone $ticketQuery)->where('assigned_to', $user->id)
+                        ->whereNotNull('rating')
+                        ->where('rating', '>', 0)
+                        ->avg('rating') ?? 0;
+
+            $closedTickets = (clone $ticketQuery)->where('assigned_to', $user->id)
+                                                ->whereIn('status', ['Closed', 'Resolved'])->get();
+            $slaCompliance = 0;
+
+        } else { // Staff
+            $createdCount = (clone $ticketQuery)->where('user_id', $user->id)->count();
+            $resolvedCount = (clone $ticketQuery)->where('user_id', $user->id)
+                                                ->whereIn('status', ['Closed', 'Resolved'])->count();
+            $openCount = (clone $ticketQuery)->where('user_id', $user->id)
+                                             ->whereNotIn('status', ['Closed', 'Resolved'])->count();
+
+            $avgRating = (clone $ticketQuery)->where('user_id', $user->id)
+                        ->whereNotNull('rating')
+                        ->where('rating', '>', 0)
+                        ->avg('rating') ?? 0;
+
+            $closedTickets = (clone $ticketQuery)->where('user_id', $user->id)
+                                                ->whereIn('status', ['Closed', 'Resolved'])->get();
+            $slaCompliance = 0;
+        }
+
+        // Pengiraan Dinamik Real untuk Avg. Resolution Time
+        $totalHoursSum = 0;
+        $ticketClosedCount = $closedTickets->count();
+
+        foreach ($closedTickets as $closedTicket) {
+            $startTime = $closedTicket->created_at;
+            $endTime = $closedTicket->updated_at;
+            if ($startTime && $endTime) {
+                $totalHoursSum += $startTime->diffInMinutes($endTime) / 60;
+            }
+        }
+
+        $avgHours = $ticketClosedCount > 0 ? ($totalHoursSum / $ticketClosedCount) : 0;
+        
+        if ($avgHours >= 24) {
+            $avgResponseFormatted = round($avgHours / 24, 1) . ' days';
+        } else {
+            $avgResponseFormatted = round($avgHours, 1) . ' hours';
+        }
 
         $myActivity = [
             'created_tickets'  => $createdCount,
+            'open_tickets'     => $openCount,
             'resolved_tickets' => $resolvedCount,
             'average_rating'   => round((float)$avgRating, 1),
+            'avg_response'     => $avgResponseFormatted,
+            'sla_compliance'   => $slaCompliance . '%',
             'filter'           => $filter,
         ];
 
@@ -89,7 +163,6 @@ class ProfileController extends Controller
 
             $usersList = User::select($userSelectCols)->orderBy('name')->get();
 
-            // Ambil Jabatan daripada jadual 'departments' DAN jadual 'users'
             $deptFromUsers = $hasUserDept ? User::whereNotNull('department')->where('department', '!=', '')->pluck('department') : collect();
             $deptFromTable = Schema::hasTable('departments') ? DB::table('departments')->pluck('name') : collect();
 
@@ -122,7 +195,6 @@ class ProfileController extends Controller
             $cDate = $ticket->created_at;
             $uDate = $ticket->updated_at;
 
-            // Tempoh Masa (Period Tag)
             $period = 'older';
             if ($cDate->isToday()) {
                 $period = 'today';
@@ -132,7 +204,6 @@ class ProfileController extends Controller
                 $period = 'this_month';
             }
 
-            // Ticket Created Event
             $rawActivities->push([
                 'category'   => 'tickets',
                 'user_name'  => $userName,
@@ -147,7 +218,6 @@ class ProfileController extends Controller
                 'is_closed'  => false,
             ]);
 
-            // Jika tiket ditugaskan kepada Juruteknik (Contoh: Bee)
             if ($ticket->assignedTechnician && $ticket->assigned_to != $ticket->user_id) {
                 $tech = $ticket->assignedTechnician;
                 $rawActivities->push([
@@ -165,7 +235,6 @@ class ProfileController extends Controller
                 ]);
             }
 
-            // Rating Event (Jika ada rating)
             if ($ticket->rating && $ticket->rating > 0) {
                 $rawActivities->push([
                     'category'   => 'ratings',
@@ -182,7 +251,6 @@ class ProfileController extends Controller
                 ]);
             }
 
-            // Ticket Reply / Update / Closed Event
             if (!$cDate->equalTo($uDate)) {
                 $uPeriod = 'older';
                 if ($uDate->isToday()) {
@@ -219,14 +287,13 @@ class ProfileController extends Controller
             }
         }
 
-        // B. Data Aktiviti Assets (MENYOKONG SEMUA VARIASI KOLOM JADUAL ASSETS ITAM)
+        // B. Data Aktiviti Assets
         if (Schema::hasTable('assets')) {
             $assets = DB::table('assets')->get();
 
             foreach ($assets as $asset) {
                 $assetArr = (array) $asset;
 
-                // 1. Semak Semua Kemungkinan Kolom Pemilik Asset
                 $assignedVal = null;
                 $possibleUserCols = [
                     'assigned_to', 'assigned_user', 'assigned_name', 'assigned_to_name',
@@ -241,11 +308,9 @@ class ProfileController extends Controller
                     }
                 }
 
-                // 2. Dapatkan Tag & Nama Asset
                 $assetTag = $assetArr['asset_tag'] ?? $assetArr['tag'] ?? $assetArr['device_name'] ?? $assetArr['name'] ?? ('Asset #' . ($assetArr['id'] ?? '1'));
                 $assetName = $assetArr['name'] ?? $assetArr['device_name'] ?? $assetArr['model'] ?? 'IT Asset';
 
-                // 3. Resolusi Model Pengguna (User Matching)
                 $assetUser = null;
                 if (!empty($assignedVal)) {
                     if (is_numeric($assignedVal)) {
@@ -258,7 +323,6 @@ class ProfileController extends Controller
                     }
                 }
 
-                // 4. Tetapkan Nama, Role, dan Department
                 if ($assetUser) {
                     $aUserName = $assetUser->name;
                     $aUserRole = strtolower($assetUser->role ?? 'staff');
@@ -276,7 +340,6 @@ class ProfileController extends Controller
                     $aUserDept = $user->department ?? 'General';
                 }
 
-                // 5. Pengiraan Period Masa
                 $aDateRaw = $assetArr['created_at'] ?? $assetArr['updated_at'] ?? now();
                 $aDate = Carbon::parse($aDateRaw);
                 $aPeriod = 'older';
@@ -304,7 +367,7 @@ class ProfileController extends Controller
             }
         }
 
-        // C. Data Registration Users (DIHUBUNGKAN KEPADA NAMA PENGGUNA SEBENAR)
+        // C. Data Registration Users
         if ($user->role === 'admin') {
             $allUsers = User::all();
             foreach ($allUsers as $usr) {
@@ -334,7 +397,6 @@ class ProfileController extends Controller
             }
         }
 
-        // Susun mengikut urutan terbaharu ke terlama
         $allActivities = $rawActivities->sortByDesc('timestamp')->values();
 
         // 5. Status Keselamatan
