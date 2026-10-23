@@ -122,9 +122,10 @@
         .nav-cyan.active { border-color: #22d3ee; background: linear-gradient(90deg, rgba(34,211,238,0.2) 0%, rgba(15,23,42,0.8) 100%); color: #22d3ee; }
         .nav-slate.active { border-color: #94a3b8; background: linear-gradient(90deg, rgba(148,163,184,0.2) 0%, rgba(15,23,42,0.8) 100%); color: #ffffff; }
 
+        /* FLOATING CHATBOT BUTTON EXACT STYLE */
         .chatbot-floating-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            background-color: #5558ff !important; /* Warna persis seperti gambar SS */
+            box-shadow: 0 0 25px rgba(85, 88, 255, 0.5) !important;
         }
     </style>
 
@@ -367,14 +368,7 @@
     <div id="ai-chat-window" class="hidden w-[92vw] sm:w-96 md:w-[420px] h-[550px] max-h-[80vh] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden mb-3 flex-col text-sm transition-all duration-300">
         <div class="bg-indigo-600 text-white p-3.5 font-bold flex justify-between items-center shadow-md">
             <span class="flex items-center gap-2 text-base">
-                <svg class="w-6 h-6 shrink-0 stroke-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-                    <circle cx="12" cy="5" r="2"></circle>
-                    <path d="M12 7v4"></path>
-                    <line x1="8" y1="16" x2="8.01" y2="16" stroke-width="3" stroke-linecap="round"></line>
-                    <line x1="16" y1="16" x2="16.01" y2="16" stroke-width="3" stroke-linecap="round"></line>
-                    <path d="M9 18c1.5 1 4.5 1 6 0"></path>
-                </svg>
+                <span class="text-xl leading-none">🤖</span>
                 RESOLV AI Support
             </span>
             <button onclick="toggleChatbot()" class="text-white hover:text-slate-200 font-bold text-xl leading-none transition">&times;</button>
@@ -408,15 +402,9 @@
         </div>
     </div>
 
-    <button onclick="toggleChatbot()" class="chatbot-floating-btn text-white p-3 sm:p-3.5 rounded-full shadow-2xl hover:scale-110 transition duration-300 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14">
-        <svg class="w-7 h-7 sm:w-8 sm:h-8 shrink-0 stroke-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-            <circle cx="12" cy="5" r="2"></circle>
-            <path d="M12 7v4"></path>
-            <line x1="8" y1="16" x2="8.01" y2="16" stroke-width="3" stroke-linecap="round"></line>
-            <line x1="16" y1="16" x2="16.01" y2="16" stroke-width="3" stroke-linecap="round"></line>
-            <path d="M9 18c1.5 1 4.5 1 6 0"></path>
-        </svg>
+    <!-- FLOATING CHATBOT BUTTON DENGAN EMOJI ROBOT 🤖 & WARNA BIRU/INDIGO PERSIS SS -->
+    <button onclick="toggleChatbot()" class="chatbot-floating-btn text-white rounded-full shadow-2xl hover:scale-110 transition duration-300 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16">
+        <span class="text-2xl sm:text-3xl select-none leading-none">🤖</span>
     </button>
 </div>
 @endauth

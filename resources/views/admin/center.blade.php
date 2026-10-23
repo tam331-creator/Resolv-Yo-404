@@ -100,7 +100,12 @@
                         </div>
                         <div class="md:col-span-2 lg:col-span-3">
                             <label class="block mb-1 text-slate-300">Initial Password *</label>
-                            <input type="password" name="users[0][password]" required autocomplete="new-password" placeholder="Minimum 6 characters" class="w-full bg-slate-950 text-slate-100 rounded-lg p-2 border border-slate-700 outline-none focus:border-indigo-500 text-xs">
+                            <div class="relative">
+                                <input type="password" id="user_password_0" name="users[0][password]" required autocomplete="new-password" placeholder="Minimum 6 characters" class="w-full bg-slate-950 text-slate-100 rounded-lg p-2 pr-9 border border-slate-700 outline-none focus:border-indigo-500 text-xs">
+                                <button type="button" onclick="togglePasswordVisibility('user_password_0', 'pass_icon_0')" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-indigo-400 transition">
+                                    <i id="pass_icon_0" class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -857,6 +862,22 @@
     let softwareRowIndex = 1;
     let currentSoftwareObject = null;
 
+    // FUNGSI TOGGLE PASSWORD VISIBILITY
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
     function switchTab(tab) {
         const userBtn = document.getElementById('tabUserBtn');
         const assetBtn = document.getElementById('tabAssetBtn');
@@ -1099,7 +1120,12 @@
 
                 <div class="md:col-span-2 lg:col-span-3">
                     <label class="block mb-1 text-slate-300">Initial Password *</label>
-                    <input type="password" name="users[${idx}][password]" required autocomplete="new-password" placeholder="Minimum 6 characters" class="w-full bg-slate-950 text-slate-100 rounded-lg p-2 border border-slate-700 outline-none focus:border-indigo-500 text-xs">
+                    <div class="relative">
+                        <input type="password" id="user_password_${idx}" name="users[${idx}][password]" required autocomplete="new-password" placeholder="Minimum 6 characters" class="w-full bg-slate-950 text-slate-100 rounded-lg p-2 pr-9 border border-slate-700 outline-none focus:border-indigo-500 text-xs">
+                        <button type="button" onclick="togglePasswordVisibility('user_password_${idx}', 'pass_icon_${idx}')" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-indigo-400 transition">
+                            <i id="pass_icon_${idx}" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;

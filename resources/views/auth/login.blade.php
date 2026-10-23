@@ -165,6 +165,22 @@
         color: #475569;
     }
 
+    .toggle-password-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0 0 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+    }
+
+    .toggle-password-btn:hover {
+        color: #818cf8;
+    }
+
     .label-title {
         display: block;
         text-align: left;
@@ -385,6 +401,9 @@
                                placeholder="••••••••" 
                                required 
                                autocomplete="current-password">
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide Password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -407,6 +426,20 @@
 </div>
 
 <script>
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');

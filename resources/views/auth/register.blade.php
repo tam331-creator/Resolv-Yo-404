@@ -206,6 +206,22 @@
         color: #475569;
     }
 
+    .toggle-password-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0 0 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+    }
+
+    .toggle-password-btn:hover {
+        color: #818cf8;
+    }
+
     /* Butang Submit - Indigo Primary */
     .btn-submit-register {
         width: 100% !important;
@@ -578,7 +594,10 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
                             </svg>
-                            <input type="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                            <input type="password" id="reg_password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('reg_password', this)" title="Show/Hide Password">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -602,6 +621,20 @@
 </div>
 
 <script>
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
     function toggleSideGuide() {
         const panel = document.getElementById('sideGuidePanel');
         const wrapper = document.getElementById('registerWrapper');

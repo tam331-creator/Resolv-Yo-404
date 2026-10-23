@@ -296,17 +296,26 @@
 
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
-                        <input type="password" name="current_password" required placeholder="Enter current password" class="w-full bg-slate-950/90 text-slate-100 rounded-xl pl-9 pr-3.5 py-2.5 border border-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 text-xs transition">
+                        <input type="password" id="current_password" name="current_password" required placeholder="Enter current password" class="w-full bg-slate-950/90 text-slate-100 rounded-xl pl-9 pr-9 py-2.5 border border-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 text-xs transition">
+                        <button type="button" onclick="togglePasswordVisibility('current_password', this)" class="absolute right-3.5 top-3.5 text-slate-500 hover:text-amber-400 text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
 
                     <div class="relative">
                         <i class="fa-solid fa-key absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
-                        <input type="password" name="new_password" required placeholder="Enter new password (min. 6 characters)" class="w-full bg-slate-950/90 text-slate-100 rounded-xl pl-9 pr-3.5 py-2.5 border border-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 text-xs transition">
+                        <input type="password" id="new_password" name="new_password" required placeholder="Enter new password (min. 6 characters)" class="w-full bg-slate-950/90 text-slate-100 rounded-xl pl-9 pr-9 py-2.5 border border-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 text-xs transition">
+                        <button type="button" onclick="togglePasswordVisibility('new_password', this)" class="absolute right-3.5 top-3.5 text-slate-500 hover:text-amber-400 text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
 
                     <div class="relative">
                         <i class="fa-solid fa-check-double absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
-                        <input type="password" name="new_password_confirmation" required placeholder="Confirm new password" class="w-full bg-slate-950/90 text-slate-100 rounded-xl pl-9 pr-3.5 py-2.5 border border-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 text-xs transition">
+                        <input type="password" id="new_password_confirmation" name="new_password_confirmation" required placeholder="Confirm new password" class="w-full bg-slate-950/90 text-slate-100 rounded-xl pl-9 pr-9 py-2.5 border border-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 text-xs transition">
+                        <button type="button" onclick="togglePasswordVisibility('new_password_confirmation', this)" class="absolute right-3.5 top-3.5 text-slate-500 hover:text-amber-400 text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
 
                     <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-2.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs mt-3 cursor-pointer active:scale-[0.99]">
@@ -616,6 +625,20 @@
 
 <script>
     let activeCategory = 'all';
+
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
 
     function toggleEditProfileModal() {
         const modal = document.getElementById('editProfileModal');
